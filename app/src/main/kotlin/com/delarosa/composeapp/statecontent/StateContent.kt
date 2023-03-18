@@ -1,4 +1,4 @@
-package com.delarosa.composeapp
+package com.delarosa.composeapp.statecontent
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
