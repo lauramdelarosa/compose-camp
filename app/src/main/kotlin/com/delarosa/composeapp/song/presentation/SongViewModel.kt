@@ -6,7 +6,7 @@ import com.delarosa.composeapp.song.domain.Song
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class MainViewModel(repository: MainRepository) : ViewModel() {
+class SongViewModel(repository: MainRepository) : ViewModel() {
 
     private val _getSongListFlow = MutableStateFlow(repository.getSongList)
     var getSongListFlow: StateFlow<List<Song>> = _getSongListFlow
