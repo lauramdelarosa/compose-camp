@@ -39,21 +39,22 @@ import com.delarosa.composeapp.ui.theme.textBodyLargeStyle
 import com.delarosa.composeapp.ui.theme.textColorContentStyle
 import com.delarosa.composeapp.ui.theme.textColorTitleStyle
 
-@Preview
+@Preview()
 @Composable
-fun Song(
+fun SongView(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel = MainViewModel(MainRepository()),
+    song: Song,
+    viewModel: SongViewModel = SongViewModel(MainRepository()),
 ) {
-    val textStateFlow by viewModel.getSongListFlow.collectAsState()
+    val songStateFlow by viewModel.getSongListFlow.collectAsState()
 
     Column(
         modifier = modifier
-            .background(brush = Brush.verticalGradient(colors = getGradientListColor()))
+            .background(brush = Brush.verticalGradient(colors = getGradientListColor(song.image)))
     ) {
-        PlaylistContent()
+        PlaylistContent(song = song)
         LazyColumn {
-            items(textStateFlow) { song ->
+            items(songStateFlow) { song ->
                 itemList(song = song)
             }
         }
@@ -62,11 +63,12 @@ fun Song(
 
 @Composable
 fun PlaylistContent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    song: Song,
 ) {
     Column(modifier = modifier) {
         Image(
-            painter = painterResource(id = R.drawable.image9),
+            painter = painterResource(id = song.image),
             contentDescription = "spotify",
             contentScale = ContentScale.Fit,
             modifier = Modifier
@@ -143,13 +145,16 @@ fun itemList(
 }
 
 @Composable
-fun getGradientListColor(): List<Color> {
-    val bitmap = BitmapFactory.decodeResource(LocalContext.current.resources, R.drawable.image9)
+fun getGradientListColor(image: Int): List<Color> {
+    val bitmap = BitmapFactory.decodeResource(LocalContext.current.resources, image)
     val mainColor = remember {
         Palette.from(bitmap).generate().darkVibrantSwatch
     }
+    val secondColor = remember {
+        Palette.from(bitmap).generate().darkMutedSwatch
+    }
     return listOf(
-        mainColor?.let { Color(it.rgb) } ?: Color.Transparent,
+        mainColor?.let { Color(it.rgb) } ?: secondColor?.let { Color(it.rgb) } ?: Color.Black,
         GrayBlack,
         Color.Black)
 }
